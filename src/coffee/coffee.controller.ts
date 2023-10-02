@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { CoffeeService } from './coffee.service';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
@@ -9,26 +17,21 @@ export class CoffeeController {
 
   @Post()
   create(@Body() createCoffeeDto: CreateCoffeeDto) {
-    return this.coffeeService.create(createCoffeeDto);
+    return this.coffeeService.createMenu(createCoffeeDto);
   }
 
   @Get()
-  findAll() {
-    return this.coffeeService.findAll();
+  GetAllMenu() {
+    return this.coffeeService.getAllMenu();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.coffeeService.findOne(+id);
+  @Get(':coffeeName')
+  GetByCoffeeName(@Param('coffeeName') coffeeName: string) {
+    return this.coffeeService.getByName(coffeeName);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCoffeeDto: UpdateCoffeeDto) {
-    return this.coffeeService.update(+id, updateCoffeeDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.coffeeService.remove(+id);
+  @Get('category/:category')
+  GetByCategory(@Param('category') category: string) {
+    return this.coffeeService.getByCategory(category);
   }
 }

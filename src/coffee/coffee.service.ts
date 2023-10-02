@@ -1,26 +1,60 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Coffee } from './entities/coffee.entity';
+import { Like, Repository } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
+import { throwError } from 'rxjs';
 
 @Injectable()
 export class CoffeeService {
-  create(createCoffeeDto: CreateCoffeeDto) {
-    return 'This action adds a new coffee';
+  constructor(
+    @InjectRepository(Coffee)
+    private readonly CoffeRepository: Repository<Coffee>,
+  ) {}
+  createMenu(createCoffeeDto: CreateCoffeeDto) {
+    const { Menu, Rating, Category, Reviewer, Description, Price } =
+      createCoffeeDto;
+    const coffee = new Coffee();
+    coffee.id = uuidv4();
+    coffee.Menu = Menu;
+    coffee.Rating = Rating;
+    coffee.Category = Category;
+    coffee.Reviewer = Reviewer;
+    coffee.Description = Description;
+    return this.CoffeRepository.save(coffee);
   }
 
-  findAll() {
-    return `This action returns all coffee`;
+  async getAllMenu(): Promise<Coffee[]> {
+    const menu = await this.CoffeRepository.find();
+    // if(!menu.length) throw new NotFoundException('Menu Ko')
+    return menu;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} coffee`;
+  async getByName(coffeeName: string): Promise<object | string> {
+    const coffee = await this.CoffeRepository.find({
+      where: {
+        Menu: Like(`%${coffeeName}%`),
+      },
+    });
+
+    return {
+      coffee,
+    };
   }
 
-  update(id: number, updateCoffeeDto: UpdateCoffeeDto) {
-    return `This action updates a #${id} coffee`;
-  }
+  async getByCategory(category: string): Promise<Coffee[]> {
+    const coffee = await this.CoffeRepository.find({
+      where: {
+        Category: category,
+      },
+    });
+    if (!coffee.length)
+      throw new NotFoundException(
+        `Tidak ada Coffe dengan Category ${category}`,
+      );
 
-  remove(id: number) {
-    return `This action removes a #${id} coffee`;
+    return coffee;
   }
 }
