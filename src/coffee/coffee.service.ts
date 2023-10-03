@@ -25,13 +25,16 @@ export class CoffeeService {
     coffee.Reviewer = Reviewer;
     coffee.Description = Description;
     coffee.imgUrl = imgUrl;
+
+    // const env = process.env.DATABASE_PASSWORD;
+    // return env;
+
     return this.CoffeRepository.save(coffee);
-    // return coffee.Price;
   }
 
   async getAllMenu(): Promise<Coffee[]> {
     const menu = await this.CoffeRepository.find();
-    // if(!menu.length) throw new NotFoundException('Menu Ko')
+    if (!menu.length) throw new NotFoundException('Menu Kosong');
     return menu;
   }
 
