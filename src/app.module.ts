@@ -10,6 +10,14 @@ import { ConfigModule } from '@nestjs/config';
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
+      // type: 'mysql',
+      // host: 'localhost',
+      // port: 3306,
+      // username: 'root',
+      // database: 'coffee-shop',
+      // password: '',
+      // autoLoadEntities: true,
+      // synchronize: true,
       type: 'mysql',
       host: process.env.HOST,
       port: 3306,
@@ -18,7 +26,6 @@ import { ConfigModule } from '@nestjs/config';
       password: process.env.DATABASE_PASSWORD,
       autoLoadEntities: true,
       synchronize: true,
-      // entities: [cof],
     }),
     CoffeeModule,
   ],

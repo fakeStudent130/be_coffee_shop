@@ -18,7 +18,7 @@ export class CoffeeController {
   constructor(private readonly coffeeService: CoffeeService) {}
 
   @Post()
-  @UsePipes(ValidationPipe)
+  @UsePipes(new ValidationPipe())
   create(@Body() createCoffeeDto: CreateCoffeeDto) {
     return this.coffeeService.createMenu(createCoffeeDto);
   }
