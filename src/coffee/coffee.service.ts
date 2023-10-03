@@ -14,16 +14,19 @@ export class CoffeeService {
     private readonly CoffeRepository: Repository<Coffee>,
   ) {}
   createMenu(createCoffeeDto: CreateCoffeeDto) {
-    const { Menu, Rating, Category, Reviewer, Description, Price } =
+    const { Menu, Rating, Category, Reviewer, Description, Price, imgUrl } =
       createCoffeeDto;
     const coffee = new Coffee();
     coffee.id = uuidv4();
     coffee.Menu = Menu;
     coffee.Rating = Rating;
     coffee.Category = Category;
+    coffee.Price = Price;
     coffee.Reviewer = Reviewer;
     coffee.Description = Description;
+    coffee.imgUrl = imgUrl;
     return this.CoffeRepository.save(coffee);
+    // return coffee.Price;
   }
 
   async getAllMenu(): Promise<Coffee[]> {

@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { CoffeeService } from './coffee.service';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
@@ -16,6 +18,7 @@ export class CoffeeController {
   constructor(private readonly coffeeService: CoffeeService) {}
 
   @Post()
+  @UsePipes(ValidationPipe)
   create(@Body() createCoffeeDto: CreateCoffeeDto) {
     return this.coffeeService.createMenu(createCoffeeDto);
   }
