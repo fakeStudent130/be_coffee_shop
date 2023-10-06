@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, HttpStatus } from '@nestjs/common';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -16,26 +16,28 @@ export class CoffeeService {
   createMenu(createCoffeeDto: CreateCoffeeDto) {
     const { Menu, Rating, Category, Reviewer, Description, Price, imgUrl } =
       createCoffeeDto;
-    const coffee = new Coffee();
-    coffee.id = uuidv4();
-    coffee.Menu = Menu;
-    coffee.Rating = Rating;
-    coffee.Category = Category;
-    coffee.Price = Price;
-    coffee.Reviewer = Reviewer;
-    coffee.Description = Description;
-    coffee.imgUrl = imgUrl;
 
-    // const env = process.env.DATABASE_PASSWORD;
-    // return env;
+    const coffee = this.CoffeRepository.create({
+      id: uuidv4(),
+      Menu: Menu,
+      Rating: Rating,
+      Category: Category,
+      Reviewer: Reviewer,
+      Description: Description,
+      Price: Price,
+      imgUrl: imgUrl,
+    });
 
     return this.CoffeRepository.save(coffee);
   }
 
-  async getAllMenu(): Promise<Coffee[]> {
+  async getAllMenu(): Promise<Coffee[] | object> {
     const menu = await this.CoffeRepository.find();
     if (!menu.length) throw new NotFoundException('Menu Kosong');
-    return menu;
+    return {
+      message: HttpStatus.OK,
+      data: menu,
+    };
   }
 
   async getByName(coffeeName: string): Promise<object | string> {
@@ -46,11 +48,12 @@ export class CoffeeService {
     });
 
     return {
-      coffee,
+      message: HttpStatus.OK,
+      data: coffee,
     };
   }
 
-  async getByCategory(category: string): Promise<Coffee[]> {
+  async getByCategory(category: string): Promise<object> {
     const coffee = await this.CoffeRepository.find({
       where: {
         Category: category,
@@ -61,6 +64,9 @@ export class CoffeeService {
         `Tidak ada Coffe dengan Category ${category}`,
       );
 
-    return coffee;
+    return {
+      message: HttpStatus.OK,
+      data: coffee,
+    };
   }
 }
