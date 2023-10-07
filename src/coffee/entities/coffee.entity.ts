@@ -22,13 +22,16 @@ export class Coffee {
   @Column({ type: 'varchar', length: 20 })
   Category: string;
 
+  @Column({ type: 'varchar', length: 100 })
+  label: string;
+
   @Column({ type: 'varchar', length: 10 })
   Reviewer: string;
 
   @Column({ type: 'text' })
   Description: string;
 
-  @Column({ type: 'double precision' })
+  @Column({ type: 'int' })
   Price: number;
 
   @Column({ type: 'text' })

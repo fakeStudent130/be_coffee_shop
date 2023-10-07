@@ -3,27 +3,27 @@ import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 export class CreateCoffeeDto {
   @IsNotEmpty()
   @IsString()
-  Menu: string;
+  menu: string;
 
   @IsNotEmpty()
   @IsNumber()
-  Rating: number;
+  rating: number;
 
   @IsNotEmpty()
   @IsString()
-  Category: string;
+  category: string;
 
   @IsNotEmpty()
   @IsString()
-  Reviewer: string;
+  reviewer: string;
 
   @IsNotEmpty()
   @IsString()
-  Description: string;
+  description: string;
 
   @IsNotEmpty()
   @IsNumber()
-  Price: number;
+  price: number;
 
   @IsNotEmpty()
   @IsString()
