@@ -4,9 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/auth.entity';
 import { Repository } from 'typeorm';
 import { RegisterDto } from './dto/register.dto';
-import { register } from 'module';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
+import { LoginDto } from './entities/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -39,19 +39,18 @@ export class AuthService {
     };
   }
 
-  findAll() {
-    return `This action returns all auth`;
-  }
+  async login(loginDto: LoginDto) {
+    const user = await this.userRepository.findOne({
+      where: {
+        email: loginDto.email,
+      },
+    });
+    if (!user) throw new UnauthorizedException('Email Not Found');
+    // const passwordUser = user.password;
+    // const hashingPassword = await bcrypt.hash();
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  // update(id: number, updateAuthDto: UpdateAuthDto) {
-  //   return `This action updates a #${id} auth`;
-  // }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+    // return hashingPassword;
+    if (user.password) return user.password;
+    // return `This action returns all auth`;
   }
 }

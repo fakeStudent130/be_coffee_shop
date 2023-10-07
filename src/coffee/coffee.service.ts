@@ -14,21 +14,22 @@ export class CoffeeService {
     private readonly CoffeRepository: Repository<Coffee>,
   ) {}
   createMenu(createCoffeeDto: CreateCoffeeDto) {
-    const { Menu, Rating, Category, Reviewer, Description, Price, imgUrl } =
+    const { menu, rating, category, reviewer, description, price, imgUrl } =
       createCoffeeDto;
 
-    const coffee = this.CoffeRepository.create({
-      id: uuidv4(),
-      Menu: Menu,
-      Rating: Rating,
-      Category: Category,
-      Reviewer: Reviewer,
-      Description: Description,
-      Price: Price,
-      imgUrl: imgUrl,
-    });
+    // const coffee = this.CoffeRepository.create({
+    //   id: uuidv4(),
+    //   menu: menu,
+    //   rating: rating,
+    //   category: category,
+    //   reviewer: reviewer,
+    //   description: description,
+    //   label: `${category} ${menu} `,
+    //   price: price,
+    //   imgUrl: imgUrl,
+    // });
 
-    return this.CoffeRepository.save(coffee);
+    // return this.CoffeRepository.save(coffee);
   }
 
   async getAllMenu(): Promise<Coffee[] | object> {
