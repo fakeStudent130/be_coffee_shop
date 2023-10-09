@@ -5,12 +5,12 @@ import { UUID } from 'uuid';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn(UUID)
-  id: UUID;
+  id: string;
 
   @Column({ type: 'varchar', length: 30 })
   email: string;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'varchar', length: 200 })
   password: string;
 
   @Column({ type: 'varchar', length: 50 })
