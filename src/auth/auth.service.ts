@@ -7,12 +7,15 @@ import { RegisterDto } from './dto/register.dto';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 import { LoginDto } from './entities/login.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+
+    private readonly jwtService: JwtService,
   ) {}
   async registerUser(registerDto: RegisterDto): Promise<object> {
     const { email, password, name } = registerDto;
@@ -24,33 +27,45 @@ export class AuthService {
     // return emailExist;
 
     if (emailExist) throw new UnauthorizedException('Email Already Used');
-    const salt = await bcrypt.genSalt();
-    const hashingPassword = await bcrypt.hash(password, salt);
+    const salt = bcrypt.genSaltSync();
+    const hashingPassword = await bcrypt.hashSync(password, salt);
     const user = this.userRepository.create({
       id: uuidv4(),
       name: name,
       email: email,
       password: hashingPassword,
     });
-    this.userRepository.save(user);
+    await this.userRepository.save(user);
+    // return hashingPassword;
 
     return {
       message: 'Register Account Successfully',
+      pass: hashingPassword,
     };
   }
 
   async login(loginDto: LoginDto) {
-    const user = await this.userRepository.findOne({
-      where: {
-        email: loginDto.email,
-      },
-    });
-    if (!user) throw new UnauthorizedException('Email Not Found');
-    // const passwordUser = user.password;
-    // const hashingPassword = await bcrypt.hash();
+    try {
+      const user = await this.userRepository.findOne({
+        where: {
+          email: loginDto.email,
+        },
+      });
+      if (!user) throw new UnauthorizedException('Email Not Found');
+      const match = await bcrypt.compare(loginDto.password, user.password);
+      if (!match) throw new UnauthorizedException('Wrong Password');
 
-    // return hashingPassword;
-    if (user.password) return user.password;
-    // return `This action returns all auth`;
+      const payload = { id: user.id, name: user.name };
+      const Accesstoken = await this.jwtService.sign(payload, {
+        secret: process.env.ACCESS_TOKEN,
+        expiresIn: '30d',
+      });
+
+      return {
+        Accesstoken,
+      };
+    } catch (error) {
+      return error.message;
+    }
   }
 }

@@ -37,4 +37,9 @@ export class CoffeeController {
   GetByCategory(@Param('category') category: string) {
     return this.coffeeService.getByCategory(category);
   }
+
+  @Get('search/:label')
+  SearchCoffe(@Param('label') label: string) {
+    return this.coffeeService.searchCoffe(label);
+  }
 }

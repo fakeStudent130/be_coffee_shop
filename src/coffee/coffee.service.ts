@@ -70,4 +70,22 @@ export class CoffeeService {
       data: coffee,
     };
   }
+
+  async searchCoffe(labelCoffee: string) {
+    try {
+      const coffee = await this.CoffeRepository.find({
+        where: {
+          label: Like(`%${labelCoffee}%`),
+        },
+      });
+      if (coffee.length === 0) throw new NotFoundException('Coffee Not Found');
+
+      return {
+        status: HttpStatus.OK,
+        data: coffee,
+      };
+    } catch (error) {
+      return error.message;
+    }
+  }
 }
